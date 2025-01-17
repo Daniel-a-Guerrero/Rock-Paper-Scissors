@@ -1,0 +1,248 @@
+
+<style>
+    body{
+        background-color: brown;
+    }
+    .game-frame{
+        padding: 2em 2em;
+        margin: 1em 4em;
+        border: 2px solid black;
+        border-radius: 30%;
+        background-color: aquamarine;
+        text-align: center;
+    }
+    .frame{
+        display: flex;
+        align-items: center;
+        justify-content:center;
+    }
+    .inner-circle{
+        border-radius: 50%;
+        background-color: lightgray;
+        padding: 0px 15px;
+        border: 1px solid yellow;
+    }
+    .game-frame h1{
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    #main-grid{
+        display: flex;
+        justify-content:center;
+    }
+    .msg
+    {
+        border: 1px solid black;
+        margin-left: 40px;
+        margin-right: 40px;
+        
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 10rem;
+        height: 14rem;
+    }
+    button
+    {
+        background-color: white;
+        color: black;
+        border-radius: 40%;
+    }
+    .pict
+    {
+        margin: 20px;
+    }
+    #final{
+        display: none;
+    }
+    #final-message{
+        animation-name: example;
+        animation-duration: 4s;
+        font-size: 100%;
+    }
+    @keyframes example {
+        from {font-size: 80%;}
+        to {font-size: 100%;}
+    }
+    #ralph{
+        display: flex;
+        justify-content:space-around;
+        flex-direction: row;
+    }
+    button[disabled]{
+        opacity: 50%;
+    }
+</style>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Rock Paper Scissors Game</title>
+    </head>
+    <body>
+        <div id="ralph">
+            <div class="frame">
+                <div class="inner-circle">
+                    <h1 id="h">0</h1>
+                </div>
+            </div>
+            <div class="game-frame">
+                <h1>A Game of Rock Paper Scissors</h1>
+                <div id="main-grid">
+                    <div id="player">
+                        <h2>Player</h2>
+                        <img class='pict' id="imago" src="img/default.png" width="100" height="100" alt="default image">
+                        <div id="options-0">
+                            <button class="opt" id="rock" onclick="doR(this.id)">Rock</button>
+                            <button class="opt" id="paper" onclick="doR(this.id)">Paper</button>
+                            <button class="opt" id="scissors" onclick="doR(this.id)">Scissors</button>
+                        </div>
+                    </div>
+                    <div class="msg" id="impossible-to-confuse">
+                        <h2>A classic game, now playable against a computer.</h2>
+                    </div>
+                    <div id="computer">
+                        <h2>Computer</h2>
+                        <img class='pict' id="AImago" src="img/default.png" width="100" height="100" alt="default image">
+                        <div id="options">
+                            <button disabled>Rock</button>
+                            <button disabled>Paper</button>
+                            <button disabled>Scissors</button>
+                        </div>
+                    </div>
+                </div>
+                <button disabled class="shoot-button" id="shoot-button" onclick="send()">Shoot</button>
+                <div id="final">
+                    <h2 id="final-message">This is the victory/defeat message</h2>
+                    <button id="reset" onclick="reset()">Reset game</button>
+                </div>
+            </div>
+            <div class="frame">
+                <div class="inner-circle">
+                    <h1 id="c">0</h1>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+<script>
+    let cs=0, hs=0;
+    const listy=["rock", "paper", "scissors"];
+    let s='';
+    function doR(loc)
+    {
+        document.getElementById("shoot-button").disabled=false;
+        s=loc;
+        document.getElementById("imago").src=(`./img/${loc}.png`);
+        for(const q of listy)
+        {
+            if(s!==q)
+            {
+                document.getElementById(q).style.backgroundColor="white";
+                document.getElementById(q).style.color="black";
+            }
+        }
+        document.getElementById(loc).style.backgroundColor="black";
+        document.getElementById(loc).style.color="white";
+    }
+    const determineWinner=(userChoice, computerChoice)=>
+    {
+        let finalMessage="";
+        if(userChoice===computerChoice)
+        {
+            finalMessage="Tie";
+        }
+        else
+        {
+            switch(userChoice)
+            {
+                case "rock":
+                finalMessage=computerChoice==="paper"?"Computer Wins":"User Wins";
+                    break;
+                case "paper":
+                finalMessage=computerChoice==="scissors"?"Computer Wins":"User Wins";
+                    break;
+                case "scissors":
+                finalMessage=computerChoice==="rock"?"Computer Wins":"User Wins";
+                    break;
+                default:
+                finalMessage="Invalid game";
+            }
+        }
+        const cspot=document.getElementById("c");
+        const hspot=document.getElementById("h");
+        if(finalMessage==="Computer Wins")
+        {
+            cspot.textContent=++cs;
+        }
+        else if(finalMessage==="User Wins")
+        {
+            hspot.textContent=++hs;
+        }
+
+        if(cs>hs)
+        {
+            cspot.parentNode.style.backgroundColor="gold";
+        }
+        else
+        {
+            cspot.parentNode.style.backgroundColor="lightgray";
+        }
+
+        if(hs>cs)
+        {
+            hspot.parentNode.style.backgroundColor="gold";
+        }
+        else
+        {
+            hspot.parentNode.style.backgroundColor="lightgray";
+        }
+
+        document.getElementById('final').style.display="inline";
+        document.getElementById('final-message').textContent=finalMessage;
+    }
+    const switchClassed=(classGroup)=>
+    {
+        if(classGroup[0].disabled===true)
+        {
+            for(let i=0;i<classGroup.length;i++)
+            {
+                classGroup[i].disabled=false;
+            }
+            return(null);
+        }
+        
+        for(let i=0;i<classGroup.length;i++)
+            {
+                classGroup[i].disabled=true;
+            }
+    }
+    const send=()=>
+    {
+        const ls=["rock", "paper", "scissors"];
+        const selected=ls[Math.floor(Math.random()*3)];
+        //document.getElementById("AImago");
+        const res=document.getElementsByClassName("opt");
+        switchClassed(res);
+        const sen=document.getElementsByClassName("shoot-button");
+        switchClassed(sen);
+        document.getElementById("AImago").src=(`./img/${selected}.png`);
+        determineWinner(s, selected);
+    }
+    const reset=()=>
+    {
+        document.getElementById("final").style.display="none";
+        const images=document.getElementsByClassName("pict");
+        for(let i=0;i<images.length;i++)
+        {
+            console.log(images[i]);
+            images[i].src="img/default.png";
+        }
+        const sel=document.getElementById(s).style;
+        sel.backgroundColor="white";
+        const res=document.getElementsByClassName("opt");
+        switchClassed(res);
+        document.getElementById("shoot-button").disabled=false;
+        sel.color="black";
+        document.getElementById("shoot-button").disabled=true;
+        s='';
+    }
+</script>
