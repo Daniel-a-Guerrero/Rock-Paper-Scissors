@@ -56,12 +56,16 @@
     }
     #final-message{
         animation-name: example;
-        animation-duration: 4s;
+        animation-duration: 2s;
         font-size: 100%;
     }
-    @keyframes example {
-        from {font-size: 80%;}
-        to {font-size: 100%;}
+    @keyframes vic {
+        from {background-color: transparent;}
+        to {background-color: gold;}
+    }
+    @keyframes fail {
+        from {background-color: transparent;}
+        to {background-color: red;}
     }
     #ralph{
         display: flex;
@@ -195,6 +199,10 @@
         {
             hspot.parentNode.style.backgroundColor="lightgray";
         }
+        if(finalMessage[0]==='C')
+            document.getElementById("final-message").style.animationName='fail'
+        else if(finalMessage[0]==="U")
+            document.getElementById("final-message").style.animationName='vic';
 
         document.getElementById('final').style.display="inline";
         document.getElementById('final-message').textContent=finalMessage;
@@ -236,6 +244,7 @@
             console.log(images[i]);
             images[i].src="img/default.png";
         }
+        document.getElementById("final-message").style.animationName='none';
         const sel=document.getElementById(s).style;
         sel.backgroundColor="white";
         const res=document.getElementsByClassName("opt");
